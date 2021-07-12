@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="row">
-            <div class="input-field col s6">
+            <div class="input-field col s4">
                 <select
                         @change="filterByUser()"
                         v-model="user_filter"
@@ -16,7 +16,7 @@
                     </option>
                 </select>
             </div>
-            <div class="input-field col s6">
+            <div class="input-field col s4">
                 <input
                         @keydown.enter="searchTask()"
                         v-model="search"
@@ -25,7 +25,12 @@
                         class="validate">
                 <label for="search">Search</label>
             </div>
-        </div>
+            <div class="input-field col s4">
+                <button @click="tasks = getTasks()"
+                        class="waves-effect waves-light btn-small sa-btn right"
+                >Reset filter</button>
+            </div>
+            </div>
 
         <div v-if="tasks"
              class="home row"
@@ -49,31 +54,33 @@
 <script>
     // @ is an alias to /src
     import tasksCol from '@/components/sa-task-column'
-    import {mapActions} from 'vuex'
+    import {mapActions, mapGetters} from 'vuex'
 
     export default {
+
         data: () => ({
             title: 'message',
             statuses: {},
-            tasks: [],
+            tasks: null,
             user_filter: null,
             search: null,
-
         }),
         components: {
             tasksCol
         },
         computed: {
-            getTasks() {
-                this.fetchTasks();
-                this.tasks = this.$store.getters.getTasks
+            getTasksComp() {
+                this.tasks = this.$store.state.tasks
             },
             getUsers() {
                 return this.$store.getters.getUsers
             },
         },
         methods: {
+            ...mapGetters(['getTasks']),
+
             filterByUser() {
+                this.tasks = this.getTasks()
                 this.tasks = this.tasks.filter(t => {
                         if (!this.user_filter)
                             return true
@@ -85,30 +92,23 @@
             searchTask() {
                 if (this.search) {
                     let new_tasks = []
-                        this.tasks.forEach(t => {
+                    this.tasks.forEach(t => {
                         if (t.title.toLowerCase().indexOf(this.search.toLowerCase()) > -1) {
                             new_tasks.push(t)
                         }
                     })
-                    if(new_tasks){
+                    if (new_tasks) {
                         this.tasks = new_tasks
                     }
                 }
-                else
-                    this.getTasks
             },
-            ...mapActions(['fetchTasks'])
         },
         mounted() {
+            this.tasks = this.getTasks()
+
             this.statuses = this.$store.getters.getStatuses
             this.user_filter = M.FormSelect.init(this.$refs.user_filter)
-            this.getTasks
         },
-        watch: {
-            /*tasks() {
-                console.log(this.tasks)
-            }*/
-        }
     }
 </script>
 

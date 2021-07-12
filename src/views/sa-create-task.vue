@@ -77,11 +77,10 @@
                     description: this.description,
                     user: this.user,
                 }
-                console.log(task)
+                // console.log(task)
 
                 this.$store.dispatch('addTask', task)
                 router.push({path: '/'})
-
             }
         },
         computed: {

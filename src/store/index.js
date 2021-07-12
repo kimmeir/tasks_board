@@ -20,28 +20,44 @@ export default new Vuex.Store({
         }
     },
     mutations: {
-        addTask: (state, tasks) => {
+        addTasks: (state, tasks) => {
             state.tasks = tasks
+        },
+        addTask: ({tasks}, task) => {
+            tasks.push(task)
+        },
+        deleteTask: ({tasks}, id) => {
+            let idx = tasks.findIndex(t => t.id === id)
+            tasks.splice(idx, 1)
+        },
+        updateTask: (state, task) => {
+            let idx = state.tasks.findIndex(t => t.id === task.id)
+            state.tasks[idx] = task
         }
     },
     actions: {
         addTask: async ({commit}, task) => {
-            axios.post('tasks', task)
+            let new_task = await axios.post('tasks', task)
+            commit('addTask', await new_task.data)
         },
         fetchTasks: async ({commit}) => {
             const tasks = await axios.get('tasks')
-            commit('addTask', await tasks.data)
+            commit('addTasks', await tasks.data)
         },
-        deleteTask: ({commit}, id) => {
-            axios({
+        deleteTask: async ({commit}, id) => {
+            let resp = await axios({
                 method: 'DELETE',
                 url: 'tasks/' + id,
             });
+            commit('deleteTask', id)
         },
         updateTask: async ({commit}, data) => {
             console.log(data.task)
             try {
-                const f = await axios.put('tasks/' + data.id, data.task)
+                const res = await axios.put('tasks/' + data.id, data.task)
+
+                console.log(await res.data)
+                commit('updateTask', await res.data)
                 router.push('/')
             } catch (e) {
                 console.error(e)
@@ -56,7 +72,7 @@ export default new Vuex.Store({
             return state.tasks
         },
         getTaskById: s => id => s.tasks.find(t => t.task_id === id),
-        getTasksByUser: s=> user => s.tasks.find(t=> t.user === user)
+        getTasksByUser: s => user => s.tasks.find(t => t.user === user)
     },
     modules: {}
 })

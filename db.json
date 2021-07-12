@@ -37,15 +37,6 @@
       "id": 4
     },
     {
-      "task_id": "1fdf7520-e0b6-11eb-b5e8-cdef2292fb89",
-      "status": "to_implementation",
-      "title": "dasdas 123",
-      "date": "2021-07-26T21:00:00.000Z",
-      "description": "sdasdas",
-      "user": "User2",
-      "id": 5
-    },
-    {
       "task_id": "3ddc4e90-e0b6-11eb-b5e8-cdef2292fb89",
       "status": "done",
       "title": "test",
@@ -56,11 +47,11 @@
     },
     {
       "task_id": "688d6a20-e0b6-11eb-b304-b17eecbe60a3",
-      "status": "to_implementation",
+      "status": "in_testing",
       "title": "asdas",
       "date": "2021-07-20T21:00:00.000Z",
       "description": "dasdsada312das",
-      "user": "User4",
+      "user": "User2",
       "id": 7
     }
   ]
